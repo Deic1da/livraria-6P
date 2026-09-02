@@ -33,21 +33,22 @@ public class LivroController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Livro>> listarLivros(){
+    public ResponseEntity<List<LivroResponseDto>> listarLivros(){
         List<Livro> livros = livroService.listarLivros();
-        return ResponseEntity.ok(livros);
+        return ResponseEntity.ok(livroMapper.toResponseList(livros));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Livro> buscarLivro(@PathVariable UUID id){
+    public ResponseEntity<LivroResponseDto> buscarLivro(@PathVariable UUID id){
         Livro livro = livroService.buscarLivro(id);
-        return ResponseEntity.ok(livro);
+        return ResponseEntity.ok(livroMapper.toResponse(livro));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Livro> atualizarLivro(@PathVariable UUID id, @RequestBody Livro livro){
+    public ResponseEntity<LivroResponseDto> atualizarLivro(@PathVariable UUID id, @RequestBody @Valid LivroRequestDto dto){
+        Livro livro = livroMapper.toEntity(dto);
         Livro atualizado = livroService.atualizarLivro(id, livro);
-        return ResponseEntity.ok(atualizado);
+        return ResponseEntity.ok(livroMapper.toResponse(atualizado));
     }
 
     @DeleteMapping("/{id}")
