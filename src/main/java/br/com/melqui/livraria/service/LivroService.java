@@ -1,5 +1,6 @@
 package br.com.melqui.livraria.service;
 
+import br.com.melqui.livraria.exception.LivroNaoEncontradoException;
 import br.com.melqui.livraria.model.Livro;
 import br.com.melqui.livraria.repository.LivroRepository;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,11 @@ public class LivroService {
     }
 
     public Livro buscarLivro(UUID id){
-        return livroRepository.findById(id).get();
+        return livroRepository.findById(id).orElseThrow(() -> new LivroNaoEncontradoException(id));
     }
 
     public Livro atualizarLivro(UUID id, Livro livro){
-        Livro existente = livroRepository.findById(id).get();
+        Livro existente = livroRepository.findById(id).orElseThrow(() -> new LivroNaoEncontradoException(id));
 
         existente.setTitulo(livro.getTitulo());
         existente.setAutor(livro.getAutor());
