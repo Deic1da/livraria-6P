@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 
 public record LivroRequestDto(
         @NotBlank @Size(max = 255) String titulo,
-        @NotBlank String autor,
-        @NotBlank String isbn,
+        @NotBlank @Size(max = 255) String autor,
+        @NotBlank @Size(max = 255) String isbn,
         @NotNull @Positive Integer anoPublicacao,
         @NotNull @Positive BigDecimal preco) {
 }
