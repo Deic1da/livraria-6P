@@ -1,0 +1,6 @@
+services:
+  livraria:
+    build: .
+    image: livraria
+    ports:
+      - "8080:8080"

@@ -1,0 +1,8 @@
+target
+.git
+.idea
+.vscode
+.claude
+aulas
+*.md
+Dockerfile
