@@ -13,7 +13,6 @@ public class LivroMapper {
     public Livro toEntity(LivroRequestDto dto){
         Livro livro = new Livro();
         livro.setTitulo(dto.titulo());
-        livro.setAutor(dto.autor());
         livro.setIsbn(dto.isbn());
         livro.setAnoPublicacao(dto.anoPublicacao());
         livro.setPreco(dto.preco());
@@ -25,7 +24,9 @@ public class LivroMapper {
         return new LivroResponseDto(
             livro.getId(),
             livro.getTitulo(),
-            livro.getAutor(),
+            livro.getAutor().getNome(),
+            livro.getCategoria().getNome(),
+            livro.getEditora().getNome(),
             livro.getIsbn(),
             livro.getAnoPublicacao(),
             livro.getPreco()

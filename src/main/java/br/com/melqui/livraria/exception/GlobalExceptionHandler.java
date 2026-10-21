@@ -3,6 +3,7 @@ package br.com.melqui.livraria.exception;
 import br.com.melqui.livraria.dto.ErrorResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,6 +40,36 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(LivroNaoEncontradoException.class)
     public ResponseEntity<ErrorResponseDto> handleLivroNaoEncontrado(LivroNaoEncontradoException ex, WebRequest request) {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(AutorNaoEncontradoException.class)
+    public ResponseEntity<ErrorResponseDto> handleAutorNaoEncontrado(AutorNaoEncontradoException ex, WebRequest request) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(CategoriaNaoEncontradaException.class)
+    public ResponseEntity<ErrorResponseDto> handleCategoriaNaoEncontrada(CategoriaNaoEncontradaException ex, WebRequest request) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(EditoraNaoEncontradaException.class)
+    public ResponseEntity<ErrorResponseDto> handleEditoraNaoEncontrada(EditoraNaoEncontradaException ex, WebRequest request) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponseDto> handleIntegridade(DataIntegrityViolationException ex, WebRequest request) {
+        return build(HttpStatus.CONFLICT, "Não é possível concluir: existem registros vinculados", request);
+    }
+
+    @ExceptionHandler(EmailJaCadastradoException.class)
+    public ResponseEntity<ErrorResponseDto> handleEmailJaCadastrado(EmailJaCadastradoException ex, WebRequest request) {
+        return build(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ResponseEntity<ErrorResponseDto> handleCredenciaisInvalidas(CredenciaisInvalidasException ex, WebRequest request) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
     }
 
     private ResponseEntity<ErrorResponseDto> build(HttpStatus status, String mensagem, WebRequest request) {

@@ -11,11 +11,21 @@ import java.util.UUID;
 @Service
 public class LivroService {
     private final LivroRepository livroRepository;
+    private final AutorService autorService;
+    private final CategoriaService categoriaService;
+    private final EditoraService editoraService;
 
-    public LivroService(LivroRepository livroRepository) {
+    public LivroService(LivroRepository livroRepository, AutorService autorService, CategoriaService categoriaService, EditoraService editoraService) {
         this.livroRepository = livroRepository;
+        this.autorService = autorService;
+        this.categoriaService = categoriaService;
+        this.editoraService = editoraService;
     }
-    public Livro criarLivro(Livro livro) {
+    public Livro criarLivro(Livro livro, UUID autorId, UUID categoriaId, UUID editoraId){
+        livro.setAutor(autorService.buscarAutor(autorId));
+        livro.setCategoria(categoriaService.buscarCategoria(categoriaId));
+        livro.setEditora(editoraService.buscarEditora(editoraId));
+
         return livroRepository.save(livro);
     }
 
@@ -27,11 +37,13 @@ public class LivroService {
         return livroRepository.findById(id).orElseThrow(() -> new LivroNaoEncontradoException(id));
     }
 
-    public Livro atualizarLivro(UUID id, Livro livro){
-        Livro existente = livroRepository.findById(id).orElseThrow(() -> new LivroNaoEncontradoException(id));
+    public Livro atualizarLivro(UUID id, Livro livro, UUID autorId, UUID categoriaId, UUID editoraId){
+        Livro existente = buscarLivro(id);
 
         existente.setTitulo(livro.getTitulo());
-        existente.setAutor(livro.getAutor());
+        existente.setAutor(autorService.buscarAutor(autorId));
+        existente.setCategoria(categoriaService.buscarCategoria(categoriaId));
+        existente.setEditora(editoraService.buscarEditora(editoraId));
         existente.setIsbn(livro.getIsbn());
         existente.setAnoPublicacao(livro.getAnoPublicacao());
         existente.setPreco(livro.getPreco());
@@ -40,6 +52,7 @@ public class LivroService {
     }
 
     public void excluirLivro(UUID id){
-        livroRepository.deleteById(id);
+        Livro existente = buscarLivro(id);
+        livroRepository.delete(existente);
     }
 }

@@ -7,6 +7,8 @@ public record LivroResponseDto(
         UUID id,
         String titulo,
         String autor,
+        String categoria,
+        String editora,
         String isbn,
         Integer anoPublicacao,
         BigDecimal preco) {
