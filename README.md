@@ -60,6 +60,3 @@ src/main/resources/
 ├── application.yaml
 └── db/migration/   migrations do Flyway (V1 a V5)
 ```
-
-## Material de estudo
-Na pasta [`aulas/av2/`](aulas/av2/) estão os PDFs que explicam o projeto: o código de cada arquivo com a explicação, o papel de cada parte, o roteiro da apresentação e as perguntas prováveis com resposta.
