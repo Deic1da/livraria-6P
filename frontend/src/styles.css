@@ -1,0 +1,22 @@
+:root { color-scheme: light dark; --borda: #8884; --destaque: #3b6fd6; --erro: #d43c3c; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; line-height: 1.4; }
+main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+h1 { margin: 0 0 1rem; }
+.caixa { max-width: 360px; }
+form { display: flex; flex-direction: column; gap: .8rem; }
+.formulario { max-width: 520px; }
+label { display: flex; flex-direction: column; gap: .25rem; font-weight: 600; }
+input, select { font: inherit; padding: .45rem .6rem; border: 1px solid var(--borda); border-radius: 6px; font-weight: 400; }
+.linha { display: flex; gap: .4rem; }
+.linha > :first-child { flex: 1; }
+.novo { margin-top: -.4rem; }
+button, .botao { font: inherit; padding: .45rem .9rem; border-radius: 6px; border: 1px solid var(--destaque); background: var(--destaque); color: #fff; cursor: pointer; text-decoration: none; }
+.secundario { background: transparent; color: var(--destaque); }
+.acoes { display: flex; gap: .5rem; }
+.topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.topo h1 { margin: 0; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: .5rem; border-bottom: 1px solid var(--borda); }
+.vazio { text-align: center; opacity: .7; }
+.erro { color: var(--erro); margin: 0; }

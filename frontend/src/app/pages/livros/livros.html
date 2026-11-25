@@ -1,0 +1,33 @@
+<main>
+  <header class="topo">
+    <h1>Livros</h1>
+    <div class="acoes">
+      <a routerLink="/livros/novo" class="botao">Novo livro</a>
+      <button type="button" class="secundario" (click)="sair()">Sair</button>
+    </div>
+  </header>
+
+  @if (erro()) {
+    <p class="erro">{{ erro() }}</p>
+  }
+
+  <table>
+    <thead>
+      <tr><th>Título</th><th>Autor</th><th>Categoria</th><th>Editora</th><th>Ano</th><th>Preço</th></tr>
+    </thead>
+    <tbody>
+      @for (livro of livros(); track livro.id) {
+        <tr>
+          <td>{{ livro.titulo }}</td>
+          <td>{{ livro.autor }}</td>
+          <td>{{ livro.categoria }}</td>
+          <td>{{ livro.editora }}</td>
+          <td>{{ livro.anoPublicacao }}</td>
+          <td>{{ livro.preco | currency: 'BRL' }}</td>
+        </tr>
+      } @empty {
+        <tr><td colspan="6" class="vazio">Nenhum livro cadastrado ainda.</td></tr>
+      }
+    </tbody>
+  </table>
+</main>

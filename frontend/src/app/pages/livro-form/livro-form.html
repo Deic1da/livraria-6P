@@ -1,0 +1,45 @@
+<main>
+  <header class="topo">
+    <h1>Novo livro</h1>
+    <a routerLink="/livros" class="botao secundario">Voltar</a>
+  </header>
+
+  <form (ngSubmit)="salvar()" class="formulario">
+    <label>Título <input name="titulo" [(ngModel)]="livro.titulo" required /></label>
+
+    @for (tipo of tipos; track tipo.chave) {
+      <label>
+        {{ tipo.rotulo }}
+        <span class="linha">
+          <select [name]="tipo.chave" [(ngModel)]="livro[tipo.chave]" required>
+            <option value="" disabled>Escolha...</option>
+            @for (opcao of opcoes[tipo.chave](); track opcao.id) {
+              <option [value]="opcao.id">{{ opcao.nome }}</option>
+            }
+          </select>
+          <button type="button" class="secundario" (click)="abrirNovo(tipo.chave)">+ novo</button>
+        </span>
+      </label>
+
+      @if (criando() === tipo.chave) {
+        <span class="linha novo">
+          <input [name]="'novo-' + tipo.chave" [(ngModel)]="novoNome" [placeholder]="'Nome do(a) ' + tipo.rotulo.toLowerCase()" />
+          <button type="button" (click)="adicionarNovo()">Adicionar</button>
+          <button type="button" class="secundario" (click)="criando.set(null)">Cancelar</button>
+        </span>
+      }
+    }
+
+    <label>ISBN <input name="isbn" [(ngModel)]="livro.isbn" required /></label>
+    <label>Ano de publicação <input name="ano" type="number" [(ngModel)]="livro.anoPublicacao" required /></label>
+    <label>Preço <input name="preco" type="number" step="0.01" [(ngModel)]="livro.preco" required /></label>
+
+    @if (erro()) {
+      <p class="erro">{{ erro() }}</p>
+    }
+
+    <div class="acoes">
+      <button type="submit">Salvar livro</button>
+    </div>
+  </form>
+</main>

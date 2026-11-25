@@ -11,6 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -23,6 +28,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                // libera o front (outra porta) a chamar a API pelo navegador
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // API com token não usa cookie de sessão, então CSRF não se aplica
                 .csrf(csrf -> csrf.disable())
                 // sem sessão no servidor: cada requisição traz o próprio token
@@ -37,6 +44,18 @@ public class SecurityConfig {
                 // o JwtFilter roda antes do filtro padrão de usuário/senha
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    // CORS: o navegador só deixa o front (localhost:4200) chamar a API (localhost:8080) se a API permitir
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:4200"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     // embaralha a senha antes de salvar (BCrypt); ninguém consegue ler a senha nem olhando o banco

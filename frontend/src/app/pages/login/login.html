@@ -1,0 +1,16 @@
+<main class="caixa">
+  <h1>Livraria</h1>
+  <form (ngSubmit)="entrar()">
+    <label>E-mail <input name="email" type="email" [(ngModel)]="email" required /></label>
+    <label>Senha <input name="senha" type="password" [(ngModel)]="senha" required /></label>
+
+    @if (erro()) {
+      <p class="erro">{{ erro() }}</p>
+    }
+
+    <div class="acoes">
+      <button type="submit">Entrar</button>
+      <button type="button" class="secundario" (click)="criarConta()">Criar conta</button>
+    </div>
+  </form>
+</main>
