@@ -1,33 +1,61 @@
-<main>
+<main class="pagina">
   <header class="topo">
-    <h1>Livros</h1>
-    <div class="acoes">
-      <a routerLink="/livros/novo" class="botao">Novo livro</a>
-      <button type="button" class="secundario" (click)="sair()">Sair</button>
-    </div>
+    <p class="marca">Livraria</p>
+    <button type="button" class="link" (click)="sair()">Sair</button>
   </header>
 
-  @if (erro()) {
-    <p class="erro">{{ erro() }}</p>
-  }
+  <section class="painel">
+    <div class="cabecalho">
+      <div>
+        <h1>Livros</h1>
+        @if (carregado()) {
+          <p class="contagem">{{ livros().length }} {{ livros().length === 1 ? 'livro cadastrado' : 'livros cadastrados' }}</p>
+        }
+      </div>
+      <a routerLink="/livros/novo" class="botao">Cadastrar livro</a>
+    </div>
 
-  <table>
-    <thead>
-      <tr><th>Título</th><th>Autor</th><th>Categoria</th><th>Editora</th><th>Ano</th><th>Preço</th></tr>
-    </thead>
-    <tbody>
-      @for (livro of livros(); track livro.id) {
-        <tr>
-          <td>{{ livro.titulo }}</td>
-          <td>{{ livro.autor }}</td>
-          <td>{{ livro.categoria }}</td>
-          <td>{{ livro.editora }}</td>
-          <td>{{ livro.anoPublicacao }}</td>
-          <td>{{ livro.preco | currency: 'BRL' }}</td>
-        </tr>
-      } @empty {
-        <tr><td colspan="6" class="vazio">Nenhum livro cadastrado ainda.</td></tr>
-      }
-    </tbody>
-  </table>
+    @if (aviso()) {
+      <p class="aviso" role="status">{{ aviso() }}</p>
+    }
+    @if (erro()) {
+      <p class="erro" role="alert">{{ erro() }}</p>
+    }
+
+    @if (carregado() && livros().length > 0) {
+      <input
+        class="busca"
+        type="search"
+        placeholder="Buscar por título ou autor"
+        aria-label="Buscar por título ou autor"
+        [value]="busca()"
+        (input)="busca.set($any($event.target).value)"
+      />
+    }
+
+    @if (carregado() && livros().length === 0) {
+      <div class="vazio">
+        <p>Nenhum livro cadastrado ainda.</p>
+        <a routerLink="/livros/novo" class="botao discreto">Cadastrar o primeiro livro</a>
+      </div>
+    } @else {
+      <ul class="lista">
+        @for (livro of filtrados(); track livro.id) {
+          <li>
+            <div class="principal">
+              <p class="titulo-livro">{{ livro.titulo }}</p>
+              <p class="secundario">{{ livro.autor }} · {{ livro.editora }}</p>
+            </div>
+            <span class="categoria"><span class="ponto" [style.background]="tom(livro.categoria)"></span>{{ livro.categoria }}</span>
+            <span class="ano">{{ livro.anoPublicacao }}</span>
+            <span class="preco">{{ livro.preco | currency: 'BRL' }}</span>
+          </li>
+        } @empty {
+          @if (carregado()) {
+            <li class="sem-resultado">Nenhum livro com "{{ busca() }}".</li>
+          }
+        }
+      </ul>
+    }
+  </section>
 </main>

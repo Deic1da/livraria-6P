@@ -1,0 +1,28 @@
+.pagina { max-width: 640px; margin: 0 auto; padding: 24px 16px 56px; }
+.topo { margin-bottom: 20px; }
+
+.painel {
+  background: var(--branco);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 1px 2px rgba(38, 38, 46, 0.06), 0 12px 32px -12px rgba(38, 38, 46, 0.12);
+}
+h1 { font-size: 26px; margin-bottom: 24px; }
+
+form { display: flex; flex-direction: column; gap: 18px; }
+
+.campo { display: flex; flex-direction: column; gap: 6px; }
+.rotulo { display: flex; justify-content: space-between; align-items: baseline; font-weight: 500; font-size: 14px; }
+.novo { display: flex; gap: 8px; }
+.novo input { flex: 1; }
+
+.linha { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }
+.linha > * { min-width: 0; }
+
+.acoes { display: flex; gap: 10px; margin-top: 6px; }
+
+@media (max-width: 560px) {
+  .painel { padding: 22px 18px; }
+  .linha { grid-template-columns: 1fr 1fr; }
+  .linha label:first-child { grid-column: 1 / -1; }
+}

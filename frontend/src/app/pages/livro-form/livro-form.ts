@@ -21,6 +21,7 @@ interface Opcao {
   selector: 'app-livro-form',
   imports: [FormsModule, RouterLink],
   templateUrl: './livro-form.html',
+  styleUrl: './livro-form.css',
 })
 export class LivroForm implements OnInit {
   private livroService = inject(LivroService);
@@ -36,6 +37,13 @@ export class LivroForm implements OnInit {
     editora: signal<Opcao[]>([]),
   };
 
+  // as três listas de escolha, na ordem em que aparecem na tela
+  tipos: { chave: Tipo; rotulo: string }[] = [
+    { chave: 'autor', rotulo: 'Autor' },
+    { chave: 'categoria', rotulo: 'Categoria' },
+    { chave: 'editora', rotulo: 'Editora' },
+  ];
+
   livro: LivroRequest = {
     titulo: '',
     autor: '',
@@ -46,17 +54,11 @@ export class LivroForm implements OnInit {
     preco: 0,
   };
 
-  // as três listas de escolha, na ordem em que aparecem na tela
-  tipos: { chave: Tipo; rotulo: string }[] = [
-    { chave: 'autor', rotulo: 'Autor' },
-    { chave: 'categoria', rotulo: 'Categoria' },
-    { chave: 'editora', rotulo: 'Editora' },
-  ];
-
   // "+ novo": qual lista está ganhando um item novo e o nome digitado
   criando = signal<Tipo | null>(null);
   novoNome = '';
   erro = signal('');
+  salvando = signal(false);
 
   ngOnInit() {
     this.carregar('autor', this.autorService.listar());
@@ -65,14 +67,20 @@ export class LivroForm implements OnInit {
   }
 
   salvar() {
+    this.erro.set('');
+    this.salvando.set(true);
     this.livroService.cadastrar(this.livro).subscribe({
-      next: () => this.router.navigate(['/livros']),
-      error: (e: HttpErrorResponse) => this.erro.set(mensagemDeErro(e)),
+      // volta pra lista levando o aviso de sucesso
+      next: (criado) => this.router.navigate(['/livros'], { state: { aviso: `"${criado.titulo}" foi cadastrado.` } }),
+      error: (e: HttpErrorResponse) => {
+        this.erro.set(mensagemDeErro(e));
+        this.salvando.set(false);
+      },
     });
   }
 
   abrirNovo(tipo: Tipo) {
-    this.criando.set(tipo);
+    this.criando.set(this.criando() === tipo ? null : tipo);
     this.novoNome = '';
   }
 

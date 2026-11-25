@@ -1,22 +1,91 @@
-:root { color-scheme: light dark; --borda: #8884; --destaque: #3b6fd6; --erro: #d43c3c; }
+/* Catálogo: fundo frio, muito branco, um único destaque em anil */
+:root {
+  --nevoa: #f2f2f5;
+  --branco: #ffffff;
+  --grafite: #26262e;
+  --cinza: #6e6e7a;
+  --linha: #e3e3ea;
+  --anil: #3a3f8f;
+  --anil-escuro: #2d3172;
+  --anil-claro: #eceefb;
+  --erro: #b3261e;
+  --sans: 'Hanken Grotesk', system-ui, sans-serif;
+  --titulo-livro: 'Newsreader', Georgia, serif;
+  color-scheme: light;
+}
+
 * { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, sans-serif; line-height: 1.4; }
-main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
-h1 { margin: 0 0 1rem; }
-.caixa { max-width: 360px; }
-form { display: flex; flex-direction: column; gap: .8rem; }
-.formulario { max-width: 520px; }
-label { display: flex; flex-direction: column; gap: .25rem; font-weight: 600; }
-input, select { font: inherit; padding: .45rem .6rem; border: 1px solid var(--borda); border-radius: 6px; font-weight: 400; }
-.linha { display: flex; gap: .4rem; }
-.linha > :first-child { flex: 1; }
-.novo { margin-top: -.4rem; }
-button, .botao { font: inherit; padding: .45rem .9rem; border-radius: 6px; border: 1px solid var(--destaque); background: var(--destaque); color: #fff; cursor: pointer; text-decoration: none; }
-.secundario { background: transparent; color: var(--destaque); }
-.acoes { display: flex; gap: .5rem; }
-.topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.topo h1 { margin: 0; }
-table { width: 100%; border-collapse: collapse; }
-th, td { text-align: left; padding: .5rem; border-bottom: 1px solid var(--borda); }
-.vazio { text-align: center; opacity: .7; }
-.erro { color: var(--erro); margin: 0; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font: 400 16px/1.55 var(--sans);
+  color: var(--grafite);
+  background: var(--nevoa);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin: 0; }
+
+/* título de livro: itálico, como em texto impresso */
+.titulo-livro { font-family: var(--titulo-livro); font-style: italic; font-weight: 500; }
+
+/* botões */
+.botao, button {
+  font: 600 15px/1 var(--sans);
+  padding: 11px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--anil);
+  background: var(--anil);
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.botao:hover, button:hover { background: var(--anil-escuro); border-color: var(--anil-escuro); }
+.botao.discreto, button.discreto { background: transparent; color: var(--anil); border-color: var(--linha); }
+.botao.discreto:hover, button.discreto:hover { background: var(--anil-claro); border-color: var(--anil-claro); }
+button:disabled { opacity: 0.6; cursor: default; }
+
+/* link com cara de link, pra ações secundárias */
+.link {
+  font: 500 14px/1.2 var(--sans);
+  color: var(--anil);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.link:hover { background: none; color: var(--anil-escuro); }
+
+:focus-visible { outline: 2px solid var(--anil); outline-offset: 2px; }
+
+/* campos */
+label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; font-size: 14px; }
+input, select {
+  font: 400 16px/1.3 var(--sans);
+  color: var(--grafite);
+  padding: 10px 12px;
+  border: 1px solid var(--linha);
+  border-radius: 8px;
+  background: var(--branco);
+  width: 100%;
+  min-width: 0;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:focus, select:focus { outline: none; border-color: var(--anil); box-shadow: 0 0 0 3px var(--anil-claro); }
+
+.erro { color: var(--erro); font-size: 14px; margin: 0; }
+
+/* entrada de cada tela: um esmaecer leve, uma vez */
+main { animation: aparecer 0.3s ease-out both; }
+@keyframes aparecer { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

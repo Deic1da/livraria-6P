@@ -1,45 +1,58 @@
-<main>
+<main class="pagina">
   <header class="topo">
-    <h1>Novo livro</h1>
-    <a routerLink="/livros" class="botao secundario">Voltar</a>
+    <a routerLink="/livros" class="link">Voltar pra lista</a>
   </header>
 
-  <form (ngSubmit)="salvar()" class="formulario">
-    <label>Título <input name="titulo" [(ngModel)]="livro.titulo" required /></label>
+  <section class="painel">
+    <h1>Cadastrar livro</h1>
 
-    @for (tipo of tipos; track tipo.chave) {
-      <label>
-        {{ tipo.rotulo }}
-        <span class="linha">
-          <select [name]="tipo.chave" [(ngModel)]="livro[tipo.chave]" required>
-            <option value="" disabled>Escolha...</option>
-            @for (opcao of opcoes[tipo.chave](); track opcao.id) {
-              <option [value]="opcao.id">{{ opcao.nome }}</option>
-            }
-          </select>
-          <button type="button" class="secundario" (click)="abrirNovo(tipo.chave)">+ novo</button>
-        </span>
-      </label>
+    <form (ngSubmit)="salvar()">
+      <label>Título <input name="titulo" [(ngModel)]="livro.titulo" required /></label>
 
-      @if (criando() === tipo.chave) {
-        <span class="linha novo">
-          <input [name]="'novo-' + tipo.chave" [(ngModel)]="novoNome" [placeholder]="'Nome do(a) ' + tipo.rotulo.toLowerCase()" />
-          <button type="button" (click)="adicionarNovo()">Adicionar</button>
-          <button type="button" class="secundario" (click)="criando.set(null)">Cancelar</button>
-        </span>
+      @for (tipo of tipos; track tipo.chave) {
+        <div class="campo">
+          <div class="rotulo">
+            <span>{{ tipo.rotulo }}</span>
+            <button type="button" class="link" (click)="abrirNovo(tipo.chave)" [attr.aria-expanded]="criando() === tipo.chave">
+              {{ criando() === tipo.chave ? 'Cancelar' : '+ Novo' }}
+            </button>
+          </div>
+
+          @if (criando() === tipo.chave) {
+            <div class="novo">
+              <input
+                [name]="'novo-' + tipo.chave"
+                [(ngModel)]="novoNome"
+                [attr.aria-label]="'Nome do(a) novo(a) ' + tipo.rotulo.toLowerCase()"
+                [placeholder]="'Nome do(a) novo(a) ' + tipo.rotulo.toLowerCase()"
+              />
+              <button type="button" class="discreto" (click)="adicionarNovo()">Adicionar</button>
+            </div>
+          } @else {
+            <select [name]="tipo.chave" [(ngModel)]="livro[tipo.chave]" [attr.aria-label]="tipo.rotulo" required>
+              <option value="" disabled>Escolha</option>
+              @for (opcao of opcoes[tipo.chave](); track opcao.id) {
+                <option [value]="opcao.id">{{ opcao.nome }}</option>
+              }
+            </select>
+          }
+        </div>
       }
-    }
 
-    <label>ISBN <input name="isbn" [(ngModel)]="livro.isbn" required /></label>
-    <label>Ano de publicação <input name="ano" type="number" [(ngModel)]="livro.anoPublicacao" required /></label>
-    <label>Preço <input name="preco" type="number" step="0.01" [(ngModel)]="livro.preco" required /></label>
+      <div class="linha">
+        <label>ISBN <input name="isbn" [(ngModel)]="livro.isbn" required /></label>
+        <label>Ano <input name="ano" type="number" [(ngModel)]="livro.anoPublicacao" required /></label>
+        <label>Preço (R$) <input name="preco" type="number" step="0.01" [(ngModel)]="livro.preco" required /></label>
+      </div>
 
-    @if (erro()) {
-      <p class="erro">{{ erro() }}</p>
-    }
+      @if (erro()) {
+        <p class="erro" role="alert">{{ erro() }}</p>
+      }
 
-    <div class="acoes">
-      <button type="submit">Salvar livro</button>
-    </div>
-  </form>
+      <div class="acoes">
+        <button type="submit" [disabled]="salvando()">{{ salvando() ? 'Salvando...' : 'Salvar livro' }}</button>
+        <a routerLink="/livros" class="botao discreto">Cancelar</a>
+      </div>
+    </form>
+  </section>
 </main>

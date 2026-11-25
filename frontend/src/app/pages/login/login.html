@@ -1,16 +1,28 @@
-<main class="caixa">
-  <h1>Livraria</h1>
-  <form (ngSubmit)="entrar()">
-    <label>E-mail <input name="email" type="email" [(ngModel)]="email" required /></label>
-    <label>Senha <input name="senha" type="password" [(ngModel)]="senha" required /></label>
+<main class="login">
+  <div class="bloco">
+    <p class="marca">Livraria</p>
+    <h1>{{ criando() ? 'Crie sua conta' : 'Entre na sua conta' }}</h1>
 
-    @if (erro()) {
-      <p class="erro">{{ erro() }}</p>
-    }
+    <form (ngSubmit)="enviar()">
+      <label>E-mail <input name="email" type="email" autocomplete="email" [(ngModel)]="email" required /></label>
+      <label>
+        Senha
+        <input name="senha" type="password" [autocomplete]="criando() ? 'new-password' : 'current-password'" [(ngModel)]="senha" required />
+      </label>
+      @if (criando()) {
+        <p class="ajuda">Pelo menos 6 caracteres.</p>
+      }
 
-    <div class="acoes">
-      <button type="submit">Entrar</button>
-      <button type="button" class="secundario" (click)="criarConta()">Criar conta</button>
-    </div>
-  </form>
+      @if (erro()) {
+        <p class="erro" role="alert">{{ erro() }}</p>
+      }
+
+      <button type="submit">{{ criando() ? 'Criar conta' : 'Entrar' }}</button>
+    </form>
+
+    <p class="troca">
+      {{ criando() ? 'Já tem conta?' : 'Não tem conta?' }}
+      <button type="button" class="link" (click)="alternar()">{{ criando() ? 'Entrar' : 'Criar conta' }}</button>
+    </p>
+  </div>
 </main>

@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   imports: [FormsModule],
   templateUrl: './login.html',
+  styleUrl: './login.css',
 })
 export class Login {
   private auth = inject(AuthService);
@@ -18,29 +19,30 @@ export class Login {
   email = '';
   senha = '';
   erro = signal('');
+  // a mesma tela serve pra entrar e pra criar conta
+  criando = signal(false);
 
-  entrar() {
-    this.auth.login({ email: this.email, senha: this.senha }).subscribe({
+  enviar() {
+    const credenciais = { email: this.email, senha: this.senha };
+    // criar conta = registrar e já entrar; entrar = só o login
+    const pedido = this.criando()
+      ? this.auth.registrar(credenciais).pipe(switchMap(() => this.auth.login(credenciais)))
+      : this.auth.login(credenciais);
+
+    pedido.subscribe({
       next: () => this.router.navigate(['/livros']),
       error: (e: HttpErrorResponse) => this.erro.set(mensagemDeErro(e)),
     });
   }
 
-  // cria a conta e já entra com ela
-  criarConta() {
-    const credenciais = { email: this.email, senha: this.senha };
-    this.auth
-      .registrar(credenciais)
-      .pipe(switchMap(() => this.auth.login(credenciais)))
-      .subscribe({
-        next: () => this.router.navigate(['/livros']),
-        error: (e: HttpErrorResponse) => this.erro.set(mensagemDeErro(e)),
-      });
+  alternar() {
+    this.criando.update((v) => !v);
+    this.erro.set('');
   }
 }
 
 // a API devolve o ErrorResponseDto com o campo "message"; sem resposta, a API está fora do ar
 export function mensagemDeErro(e: HttpErrorResponse) {
-  if (e.status === 0) return 'Não foi possível falar com a API. Ela está rodando?';
+  if (e.status === 0) return 'Não foi possível falar com a API. Confira se ela está rodando na porta 8080.';
   return e.error?.message ?? 'Erro inesperado';
 }
